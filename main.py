@@ -1,100 +1,95 @@
 from enum import Enum
 from pieces import Piece, Pawn, Rook, Bishop, Knight, Queen, King, Colour, Empty
 
-# class Piece(Enum):
-#     W_PAWN = 'P'
-#     B_PAWN = 'p'
-#     W_ROOK = 'R'
-#     B_ROOK = 'r'
-#     W_BISHOP = 'B'
-#     B_BISHOP = 'b'
-#     W_KNIGHT = 'N'
-#     B_KNIGHT = 'n'
-#     W_QUEEN = 'Q'
-#     B_QUEEN = 'q'
-#     W_KING = 'K'
-#     B_KING = 'k'
+BOARD_SIZE = 8
 
-startingFEN = "rnbqkbnr/pppppppp/eeeeeeee/eeeeeeee/eeeeeeee/eeeeeeee/PPPPPPPP/RNBQKBNR"
+startingFEN = "rnbqkbnr/pppppppp/eeeeeeee/eeeeeeee/eeeeeeee/eeeeeeee/PPPPPPPP/RNBQKBNR/ w KQkq - 0 1"
 
 def main():
-    printBoard(startingFEN)
+    board = convertFENtoBoard(startingFEN)
+    printBoard(board)
 
-# Prints the board given by the FEN String
-def printBoard(FENstring):
+# Converts the FEN String into the board
+def convertFENtoBoard(FENstring):
 
-    horizontalPattern = "  ------- ------- ------- ------- ------- ------- ------- -------"
-    print("    A       B       C       D       E       F       G       H  ")
-    print(horizontalPattern)
+    board = FENstring.split('/')
+
+    # Convert FEN string into Pieces
+    for i in range(BOARD_SIZE):
+        board[i] = list(board[i])
+        for j in range(BOARD_SIZE):
+            if board[i][j] == 'p':
+                board[i][j] = Pawn(Colour.BLACK)
+                continue
+            if board[i][j] == 'P':
+                board[i][j] = Pawn(Colour.WHITE)
+                continue
+            if board[i][j] == 'r':
+                board[i][j] = Rook(Colour.BLACK)
+                continue
+            if board[i][j] == 'R':
+                board[i][j] = Rook(Colour.WHITE)
+                continue
+            if board[i][j] == 'b':
+                board[i][j] = Bishop(Colour.BLACK)
+                continue
+            if board[i][j] == 'B':
+                board[i][j] = Bishop(Colour.WHITE)
+                continue
+            if board[i][j] == 'n':
+                board[i][j] = Knight(Colour.BLACK)
+                continue
+            if board[i][j] == 'N':
+                board[i][j] = Knight(Colour.WHITE)
+                continue
+            if board[i][j] == 'q':
+                board[i][j] = Queen(Colour.BLACK)
+                continue
+            if board[i][j] == 'Q':
+                board[i][j] = Queen(Colour.WHITE)
+                continue
+            if board[i][j] == 'k':
+                board[i][j] = King(Colour.BLACK)
+                continue
+            if board[i][j] == 'K':
+                board[i][j] = King(Colour.WHITE)
+                continue
+            if board[i][j] == 'e':
+                board[i][j] = Empty()
+                continue
+
+    return board
+
+
+# Prints the board
+def printBoard(board):
+
+    rowDivider = "  ------- ------- ------- ------- ------- ------- ------- -------"
+    header = "    A       B       C       D       E       F       G       H  "
+
+    print(header)
+    print(rowDivider)
 
     # Current row being printed (values 1 <= x <= 8)
     currentRow = 8
     
-    # Each piece takes up three lines, this keeps track of 
-    # which line must be printed (can take values 1, 2, 3)
-    rows = FENstring.split('/')
-
-    # Convert FEN string into Pieces
-    for j in range(len(rows)):
-        rows[j] = list(rows[j])
-        for i in range(len(rows[j])):
-            if rows[j][i] == 'p':
-                rows[j][i] = Pawn(Colour.BLACK)
-                continue
-            if rows[j][i] == 'P':
-                rows[j][i] = Pawn(Colour.WHITE)
-                continue
-            if rows[j][i] == 'r':
-                rows[j][i] = Rook(Colour.BLACK)
-                continue
-            if rows[j][i] == 'R':
-                rows[j][i] = Rook(Colour.WHITE)
-                continue
-            if rows[j][i] == 'b':
-                rows[j][i] = Bishop(Colour.BLACK)
-                continue
-            if rows[j][i] == 'B':
-                rows[j][i] = Bishop(Colour.WHITE)
-                continue
-            if rows[j][i] == 'n':
-                rows[j][i] = Knight(Colour.BLACK)
-                continue
-            if rows[j][i] == 'N':
-                rows[j][i] = Knight(Colour.WHITE)
-                continue
-            if rows[j][i] == 'q':
-                rows[j][i] = Queen(Colour.BLACK)
-                continue
-            if rows[j][i] == 'Q':
-                rows[j][i] = Queen(Colour.WHITE)
-                continue
-            if rows[j][i] == 'k':
-                rows[j][i] = King(Colour.BLACK)
-                continue
-            if rows[j][i] == 'K':
-                rows[j][i] = King(Colour.WHITE)
-                continue
-            if rows[j][i] == 'e':
-                rows[j][i] = Empty()
-                continue
-
-    for i in range(len(rows)):
+    for i in range(BOARD_SIZE):
         currentLine = " |"
-        for j in range(len(rows[i])):
-            currentLine = ''.join([currentLine, rows[i][j].Line1])
+        for j in range(BOARD_SIZE):
+            currentLine = currentLine + board[i][j].Line1
         print(currentLine)
 
         currentLine = f"{currentRow}|"
-        for j in range(len(rows[i])):
-            currentLine = ''.join([currentLine, rows[i][j].Line2])
+        for j in range(BOARD_SIZE):
+            currentLine = currentLine + board[i][j].Line2
         print(currentLine + f'{currentRow}')
 
         currentLine = " |"
-        for j in range(len(rows[i])):
-            currentLine = ''.join([currentLine, rows[i][j].Line3])
+        for j in range(BOARD_SIZE):
+            currentLine = currentLine + board[i][j].Line3
         print(currentLine)
     
-        print(horizontalPattern)
+        print(rowDivider)
         currentRow -= 1
 
 main()
