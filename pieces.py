@@ -21,15 +21,6 @@ class Pawn(Piece):
             self.Line2 = "  (@)  |"
             self.Line3 = "  /@\  |"
 
-    # def getLine1(self):
-    #     return self.Line1
-
-    # def getLine2(self):
-    #     return self.Line2
-
-    # def getLine3(self):
-    #     return self.Line3
-
 class Rook(Piece):
     def __init__(self, colour):
         self.colour = colour

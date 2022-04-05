@@ -60,7 +60,6 @@ def convertFENtoBoard(FENstring):
 
     return board
 
-
 # Prints the board
 def printBoard(board):
 
@@ -72,23 +71,21 @@ def printBoard(board):
 
     # Current row being printed (values 1 <= x <= 8)
     currentRow = 8
-    
+
+    # Print row by row, each row contains 3 lines
     for i in range(BOARD_SIZE):
-        currentLine = " |"
+        line1 = " |"
+        line2 = f"{currentRow}|"
+        line3 = " |"
+        
         for j in range(BOARD_SIZE):
-            currentLine = currentLine + board[i][j].Line1
-        print(currentLine)
+            line1 = line1 + board[i][j].Line1
+            line2 = line2 + board[i][j].Line2
+            line3 = line3 + board[i][j].Line3
 
-        currentLine = f"{currentRow}|"
-        for j in range(BOARD_SIZE):
-            currentLine = currentLine + board[i][j].Line2
-        print(currentLine + f'{currentRow}')
-
-        currentLine = " |"
-        for j in range(BOARD_SIZE):
-            currentLine = currentLine + board[i][j].Line3
-        print(currentLine)
-    
+        print(line1)
+        print(line2 + f"{currentRow}")
+        print(line3)
         print(rowDivider)
         currentRow -= 1
 
