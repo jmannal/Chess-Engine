@@ -8,6 +8,8 @@ class Piece:
     def __init__(self, colour):
         self.colour = colour
 
+# Piece designs by "Alfe" https://stackoverflow.com/questions/19517374/
+# pythonic-way-to-print-a-chess-board-in-console#comment28954981_19518200
 class Pawn(Piece):
     def __init__(self, colour):
         self.colour = colour
