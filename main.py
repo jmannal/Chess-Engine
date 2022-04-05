@@ -1,3 +1,4 @@
+from enum import Enum
 from pieces import Piece, Pawn, Rook, Bishop, Knight, Queen, King, Colour, Empty
 
 BOARD_SIZE = 8
@@ -8,12 +9,22 @@ def main():
     board = convertFENtoBoard(startingFEN)
     printBoard(board)
 
+    while(True):
+        newMove = input("Enter Move: ")
+        board = move(newMove, board)
+        printBoard(board)
+
 # Converts the FEN String into the board
 def convertFENtoBoard(FENstring):
 
-    board = list(FENstring.replace('/', '')[0:NUMBER_OF_SQUARES])
+    # Reverse the board rows so that position A1 is the first array element
+    # and H8 is the last
+    board = list(FENstring.split('/')[0:BOARD_SIZE])
+    board.reverse()
+    board = list(''.join(board))
+    print(board)
+    #board = list(FENstring.replace('/', '')[0:NUMBER_OF_SQUARES])
 
-    
     for i in range(NUMBER_OF_SQUARES):
         if board[i] == 'p':
             board[i] = Pawn(Colour.BLACK)
@@ -75,10 +86,11 @@ def printBoard(board):
         line2 = f"{currentRow}|"
         line3 = " |"
         
+        # Print rows in reverse order so that white is on bottom
         for j in range(BOARD_SIZE):
-            line1 = line1 + board[BOARD_SIZE * i + j].Line1
-            line2 = line2 + board[BOARD_SIZE * i + j].Line2
-            line3 = line3 + board[BOARD_SIZE * i + j].Line3
+            line1 = line1 + board[BOARD_SIZE * (BOARD_SIZE - i - 1) + j].Line1
+            line2 = line2 + board[BOARD_SIZE * (BOARD_SIZE - i - 1) + j].Line2
+            line3 = line3 + board[BOARD_SIZE * (BOARD_SIZE - i - 1) + j].Line3
 
         print(line1)
         print(line2 + f"{currentRow}")
@@ -89,10 +101,29 @@ def printBoard(board):
     print(letters)
 
 
-def move(move, FEN):
+def move(move, board):
     rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     rowFrom = move[0]
-    columnFrom = move[1]
+    columnFrom = int(move[1])
+    rowTo = move[2]
+    columnTo = int(move[3])
+    valid = checkValidMove(move)
+    if not valid:
+        return 'Invalid Move'
+    
+
+
+    board[rows.index(rowTo) + BOARD_SIZE * (columnTo - 1)] = board[rows.index(rowFrom) + BOARD_SIZE * (columnFrom - 1)]
+    board[rows.index(rowFrom) + BOARD_SIZE * (columnFrom - 1)] = Empty()
+    
+    return board
+
+
+def convertBoardtoFEN(board):
+    pass
+
+def checkValidMove(move):
+    return 1
 
 
 main()
