@@ -1,4 +1,5 @@
 from pieces import Piece, Pawn, Rook, Bishop, Knight, Queen, King, Colour, Empty
+from enum import Enum
 
 class Board():
     def __init__(self, startFEN):
@@ -6,7 +7,10 @@ class Board():
         self.size = 8
         self.numberOfSquares = 64
         self.state = self.initialiseBoard(startFEN)
+        self.initialiseExtraInfo(self.extraInfo)
+        self.turn = Colour.WHITE
 
+    # Converts the FEN String into the board
     def initialiseBoard(self, startFEN):
 
         extraInfo = startFEN.split('/')[-1]
@@ -60,6 +64,9 @@ class Board():
 
         return board
 
+    def initialiseExtraInfo(self, extraInfo):
+        info = extraInfo.split()
+
     def print(self):
         rowDivider = " " + (" -------" * 8)
         lettersKey = "     A       B       C       D       E       F       G       H"
@@ -89,3 +96,30 @@ class Board():
             currentRow -= 1
 
         print(lettersKey)
+
+    def move(self, move):
+
+        rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        fromIndex = rows.index(move[0]) + self.size * (int(move[1]) - 1)
+        toIndex = rows.index(move[2]) + self.size * (int(move[3]) - 1)
+
+        self.state[toIndex] = self.state[fromIndex]
+        self.state[fromIndex] = Empty()
+
+    def checkValidMove(self, move):
+
+        rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        rowFrom = rows.index(move[0])
+        columnFrom = int(move[1])
+        rowTo = rows.index(move[2])
+        columnTo = int(move[3])
+        fromIndex = rowFrom + self.size * (columnFrom - 1)
+        toIndex = rowTo + self.size * (columnTo - 1)
+
+        if self.state[fromIndex].getClass() == 'Empty':
+            print("Empty square")
+            return False
+        elif self.state[fromIndex].colour != self.turn:
+            print("Wrong colour")
+            return False
+        return True
