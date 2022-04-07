@@ -1,5 +1,6 @@
 from pieces import Piece, Pawn, Rook, Bishop, Knight, Queen, King, Colour, Empty
 from enum import Enum
+from move import Move
 
 class Board():
     def __init__(self, startFEN):
@@ -100,7 +101,7 @@ class Board():
 
     def move(self, move):
 
-        rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         fromIndex = rows.index(move[0]) + self.size * (int(move[1]) - 1)
         toIndex = rows.index(move[2]) + self.size * (int(move[3]) - 1)
 
@@ -121,8 +122,9 @@ class Board():
         5. Piece must not move onto a square occupied by a piece of the same colour
         6. Piece must not move *through* another piece (except for knight)
         7. And the king must not be in check after the move.
+        """
 
-
+        """
          ------- ------- -------
         |       |       |       |
         |   7   |   8   |   9   |
@@ -135,7 +137,9 @@ class Board():
          ------- ------- -------
         """
 
-        rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        requestedMove = Move(move)
+
+        rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         rowFrom = rows.index(move[0])
         columnFrom = int(move[1])
         rowTo = rows.index(move[2])
@@ -149,7 +153,7 @@ class Board():
             moveDirection = 1
             moveDistance = float(columnTo - columnFrom)
         elif columnFrom == columnTo:
-            moveDirection = 8.0
+            moveDirection = 8
             moveDistance = float(rowTo - rowFrom)
         elif abs(rowFrom - rowTo) > 0 and abs(columnFrom - columnTo) > 0:
             moveDirection = 9
@@ -157,7 +161,6 @@ class Board():
         elif abs(rowFrom - rowTo) > 0 and abs(columnFrom - columnTo) < 0:
             moveDirection = 7
             moveDistance = (toIndex - fromIndex) / 7
-
 
         # Check piece is on the side moving
         if self.state[fromIndex].colour != self.turn:
@@ -177,20 +180,13 @@ class Board():
                 print("Not Proper Diagonal")
                 return False
 
-        
-        
-        # if board[moveFrom].getClass() == 'Pawn':
-        #     pass
-        # elif board[moveFrom].getClass() == 'Rook':
-        #     pass
-        # elif board[moveFrom].getClass() == 'Bishop':
-        #     pass
-        # elif board[moveFrom].getClass() == 'Knight':
-        #     pass
-        # elif board[moveFrom].getClass() == 'Queen':
-        #     pass
-        # elif board[moveFrom].getClass() == 'King':
-        #     pass
+        if pieceMoving.getClass() == Piece.KNIGHT:
+            rankDif = abs(int(requestedMove.toRank) - int(requestedMove.fromRank))/8
+            fileDif = abs(int(requestedMove.toFile) - int(requestedMove.fromFile))
+
+            if not (rankDif == 2 and fileDif == 1) and not(rankDif == 1 and fileDif == 2):
+                print("Incorrect Knight Move")
+                return False
 
         return True
         
