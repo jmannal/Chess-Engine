@@ -110,7 +110,6 @@ class Board():
         self.changeTurn()
         self.enPassent = None
 
-
     def checkValidMove(self, move):
 
         """ 
@@ -142,14 +141,14 @@ class Board():
         rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         rowFrom = rows.index(move[0])
         columnFrom = int(move[1])
-        rowTo = rows.index(move[2])
-        columnTo = int(move[3])
+        #rowTo = rows.index(move[2])
+        #columnTo = int(move[3])
         fromIndex = rowFrom + self.size * (columnFrom - 1)
-        toIndex = rowTo + self.size * (columnTo - 1)
+        #toIndex = rowTo + self.size * (columnTo - 1)
 
         pieceMoving = self.state[fromIndex]
 
-        if rowFrom == rowTo:
+        """if rowFrom == rowTo:
             moveDirection = 1
             moveDistance = float(columnTo - columnFrom)
         elif columnFrom == columnTo:
@@ -160,28 +159,30 @@ class Board():
             moveDistance = (toIndex - fromIndex) / 9
         elif abs(rowFrom - rowTo) > 0 and abs(columnFrom - columnTo) < 0:
             moveDirection = 7
-            moveDistance = (toIndex - fromIndex) / 7
+            moveDistance = (toIndex - fromIndex) / 7"""
 
         # Check piece is on the side moving
-        if self.state[fromIndex].colour != self.turn:
+        if self.state[requestedMove.fromIndex].colour != self.turn:
             print("Wrong colour")
             return False
 
-        if self.state[fromIndex].getClass() == Piece.EMPTY:
+        if self.state[requestedMove.fromIndex].getClass() == Piece.EMPTY:
             print("Empty square")
             return False
 
-        if self.state[fromIndex].colour == self.state[toIndex].colour:
+        if self.state[requestedMove.fromIndex].colour == self.state[requestedMove.toIndex].colour:
             print("Cannot land on piece of the same colour")
             return False
 
         if pieceMoving.getClass() != Piece.KNIGHT:
-            if not moveDistance.is_integer():
+            if not requestedMove.moveDistance.is_integer():
                 print("Not Proper Diagonal")
                 return False
 
+        # Knight must move either 2 Ranks and 1 File or
+        #                         1 Rank  and 2 Files
         if pieceMoving.getClass() == Piece.KNIGHT:
-            rankDif = abs(int(requestedMove.toRank) - int(requestedMove.fromRank))/8
+            rankDif = abs(int(requestedMove.toRank) - int(requestedMove.fromRank))/self.size
             fileDif = abs(int(requestedMove.toFile) - int(requestedMove.fromFile))
 
             if not (rankDif == 2 and fileDif == 1) and not(rankDif == 1 and fileDif == 2):
@@ -189,7 +190,6 @@ class Board():
                 return False
 
         return True
-        
 
     def changeTurn(self):
         if self.turn == Colour.WHITE:

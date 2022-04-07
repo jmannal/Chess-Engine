@@ -37,6 +37,7 @@ class Move():
         rowTo = move[2]
         columnTo = int(move[3])
 
+    
         self.fromFile = files[rows.index(rowFrom.lower())]
         self.fromRank = ranks[columnFrom - 1]
 
@@ -48,6 +49,20 @@ class Move():
 
         self.fromIndex = int(self.fromFile) + int(self.fromRank)
         self.toIndex = int(self.toFile) + int(self.toRank)
+
+        if self.fromFile == self.toFile:
+            self.moveDirection = 1
+            self.moveDistance = float(columnTo - columnFrom)
+        elif self.fromRank == self.toRank:
+            self.moveDirection = 8
+            self.moveDistance = float(rowTo - rowFrom)
+        elif abs(self.fromFile.value - self.toFile.value) > 0 and abs(self.fromRank.value - self.toRank.value) > 0:
+            self.moveDirection = 9
+            self.moveDistance = (self.toIndex - self.fromIndex) / 9
+        elif abs(rowFrom - rowTo) > 0 and abs(columnFrom - columnTo) < 0:
+            self.moveDirection = 7
+            self.moveDistance = (self.toIndex - self.fromIndex) / 7
+
 
     def print():
         pass

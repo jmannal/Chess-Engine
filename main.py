@@ -4,7 +4,7 @@ from board import Board
 
 BOARD_SIZE = 8
 NUMBER_OF_SQUARES = 64
-startingFEN = "rnbqkbnr/pppppppp/eeeeeeee/eeeeeeee/eeeeeeee/eeeeeeee/PPPPPPPP/RNBQKBNR/ w KQkq - 0 1"
+startingFEN = "rnbqkbnr/pppppppp/eeeeeeee/eeeeeeee/eeeeeeee/eeeeeeee/PPPPPPPP/RNBQKBNR/ w KQkq - 0"
 
 def main():
     board = Board(startingFEN)
@@ -23,6 +23,4 @@ def main():
         board.move(newMove)
         board.print()
     
-
-
 main()
