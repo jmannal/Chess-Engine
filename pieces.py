@@ -3,14 +3,20 @@ from enum import Enum
 class Colour(Enum):
     WHITE = 0
     BLACK = 1
+    EMPTY = 2
 
-class Piece:
-    def __init__(self, colour):
-        self.colour = colour
+class Piece(Enum):
+    PAWN = 0
+    ROOK = 1
+    KNIGHT = 2
+    BISHOP = 3
+    QUEEN = 4
+    KING = 5
+    EMPTY = 6
 
 # Piece designs by "Alfe" https://stackoverflow.com/questions/19517374/
 # pythonic-way-to-print-a-chess-board-in-console#comment28954981_19518200
-class Pawn(Piece):
+class Pawn():
     def __init__(self, colour):
         self.colour = colour
         self.moved = False
@@ -27,9 +33,9 @@ class Pawn(Piece):
             self.moves = [-8, -16, -7, -9]
 
     def getClass(self):
-        return 'Pawn'
+        return Piece.PAWN
         
-class Rook(Piece):
+class Rook():
     def __init__(self, colour):
         self.colour = colour
         if self.colour == colour.WHITE:
@@ -45,8 +51,8 @@ class Rook(Piece):
         self.moves = [-1, 1, -8, 8]
 
     def getClass(self):
-        return 'Rook'
-class Bishop(Piece):
+        return Piece.ROOK
+class Bishop():
     def __init__(self, colour):
         self.colour = colour
         if self.colour == colour.WHITE:
@@ -62,9 +68,9 @@ class Bishop(Piece):
         self.moves = [7, 9, -7, -9]
 
     def getClass(self):
-        return 'Bishop'
+        return Piece.BISHOP
 
-class Knight(Piece):
+class Knight():
     def __init__(self, colour):
         self.colour = colour
         if self.colour == colour.WHITE:
@@ -80,9 +86,9 @@ class Knight(Piece):
         self.moves = [17, 15, 6, 10, -6, -10, -15, -17]
 
     def getClass(self):
-        return 'Knight'
+        return Piece.KNIGHT
 
-class Queen(Piece):
+class Queen():
     def __init__(self, colour):
         self.colour = colour
         if self.colour == colour.WHITE:
@@ -98,9 +104,9 @@ class Queen(Piece):
         self.moves = [1, 7, 8, 9, -1, -7, -8, -9]
 
     def getClass(self):
-        return 'Queen'
+        return Piece.QUEEN
 
-class King(Piece):
+class King():
     def __init__(self, colour):
         self.colour = colour
         if self.colour == colour.WHITE:
@@ -116,13 +122,15 @@ class King(Piece):
         self.moves = [-1, 1, -7, 7, -8, 8, -9, 9]
 
     def getClass(self):
-        return 'King'
+        return Piece.KING
 
 class Empty():
     def __init__(self):
+        self.colour = Colour.EMPTY
         self.Line1 = "       |"
         self.Line2 = "       |"
         self.Line3 = "       |"
 
     def getClass(self):
-        return 'Empty'
+        return Piece.EMPTY
+    

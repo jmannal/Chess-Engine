@@ -9,6 +9,7 @@ class Board():
         self.state = self.initialiseBoard(startFEN)
         self.initialiseExtraInfo(self.extraInfo)
         self.turn = Colour.WHITE
+        self.enPassent = None
 
     # Converts the FEN String into the board
     def initialiseBoard(self, startFEN):
@@ -105,8 +106,34 @@ class Board():
 
         self.state[toIndex] = self.state[fromIndex]
         self.state[fromIndex] = Empty()
+        self.changeTurn()
+        self.enPassent = None
+
 
     def checkValidMove(self, move):
+
+        """ 
+        For a move to be valid:
+        1. Correct colour must be moving
+        2. The piece must only move a distance it's allowed to
+        3. Piece must move in a direction it is allowed to
+        4. Piece must not move out of bounds
+        5. Piece must not move onto a square occupied by a piece of the same colour
+        6. Piece must not move *through* another piece (except for knight)
+        7. And the king must not be in check after the move.
+
+
+         ------- ------- -------
+        |       |       |       |
+        |   7   |   8   |   9   |
+         ------- ------- -------
+        |       |       |       |
+        |  -1   | PIECE |   1   |
+         ------- ------- -------
+        |       |       |       |
+        |  -9   |  -8   |  -7   |
+         ------- ------- -------
+        """
 
         rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
         rowFrom = rows.index(move[0])
@@ -116,10 +143,60 @@ class Board():
         fromIndex = rowFrom + self.size * (columnFrom - 1)
         toIndex = rowTo + self.size * (columnTo - 1)
 
-        if self.state[fromIndex].getClass() == 'Empty':
-            print("Empty square")
-            return False
-        elif self.state[fromIndex].colour != self.turn:
+        pieceMoving = self.state[fromIndex]
+
+        if rowFrom == rowTo:
+            moveDirection = 1
+            moveDistance = float(columnTo - columnFrom)
+        elif columnFrom == columnTo:
+            moveDirection = 8.0
+            moveDistance = float(rowTo - rowFrom)
+        elif abs(rowFrom - rowTo) > 0 and abs(columnFrom - columnTo) > 0:
+            moveDirection = 9
+            moveDistance = (toIndex - fromIndex) / 9
+        elif abs(rowFrom - rowTo) > 0 and abs(columnFrom - columnTo) < 0:
+            moveDirection = 7
+            moveDistance = (toIndex - fromIndex) / 7
+
+
+        # Check piece is on the side moving
+        if self.state[fromIndex].colour != self.turn:
             print("Wrong colour")
             return False
+
+        if self.state[fromIndex].getClass() == Piece.EMPTY:
+            print("Empty square")
+            return False
+
+        if self.state[fromIndex].colour == self.state[toIndex].colour:
+            print("Cannot land on piece of the same colour")
+            return False
+
+        if pieceMoving.getClass() != Piece.KNIGHT:
+            if not moveDistance.is_integer():
+                print("Not Proper Diagonal")
+                return False
+
+        
+        
+        # if board[moveFrom].getClass() == 'Pawn':
+        #     pass
+        # elif board[moveFrom].getClass() == 'Rook':
+        #     pass
+        # elif board[moveFrom].getClass() == 'Bishop':
+        #     pass
+        # elif board[moveFrom].getClass() == 'Knight':
+        #     pass
+        # elif board[moveFrom].getClass() == 'Queen':
+        #     pass
+        # elif board[moveFrom].getClass() == 'King':
+        #     pass
+
         return True
+        
+
+    def changeTurn(self):
+        if self.turn == Colour.WHITE:
+            self.turn = Colour.BLACK
+        elif self.turn == Colour.BLACK:
+            self.turn = Colour.WHITE
